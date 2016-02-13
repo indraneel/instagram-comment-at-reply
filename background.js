@@ -25,6 +25,7 @@ $('input[type=text]').keyup(debounce( function() {
 				if(res.users[0] !== undefined) {
 					inputAsArray[location] = "@"+res.users[0].user.username;
 					inputField.val(inputAsArray.join(" "));
+					inputField.append(" ");
 				}
 			})
 	}
