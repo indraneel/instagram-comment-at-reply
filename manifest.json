@@ -4,7 +4,7 @@
   "description": "autocompletes @replies in IG web comment box",
   "content_scripts": [ {
     "matches": [ "http://www.instagram.com/*", "https://www.instagram.com/*", "http://instagram.com/*", "https://instagram.com/*"],
-    "js": [ "jquery-2.2.0.min.js", "background.js" ]
+    "js": [ "background.js" ]
   }],
   "manifest_version": 2
 }

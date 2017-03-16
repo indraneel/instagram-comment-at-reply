@@ -6,6 +6,8 @@ var inputField = null;
 var inputAsArray = [];
 var autocompletes = [];
 var typingLocation = 0;
+var body = document.querySelector('body');
+var pendingRequest = null;
 
 //// utilities
 
@@ -37,9 +39,11 @@ function renderAutocompleteOption(value, id) {
   var username = document.createElement("span");
   username.className = "autocomplete-option";
   username.id = id;
-  username.innerHTML = value;
+  username.innerHTML = '@' + value;
+  username.style.color = '#003569';
+  username.style.cursor = 'pointer';
 
-  $(username).click(function() {
+  username.addEventListener('click',function() {
     var clickedID = username.id;
     handleSelectedOption(clickedID);
   });
@@ -76,33 +80,44 @@ function destructAutocomplete() {
 //// event handlers
 function handleSelectedOption(clickedID) {
   inputAsArray[typingLocation] = "@"+autocompletes[clickedID].user.username;
-  inputField.val(inputAsArray.join(" "));
+  inputField.value = inputAsArray.join(" ");
   inputField.append(" ");
 }
 
 function handleResponse(res, inputField) {
   if(res.users[0] !== undefined) {
     destructAutocomplete();
-    var inputFieldParent = inputField[0].parentNode;
+    var inputFieldParent = inputField.parentNode;
     autocompletes = res.users.slice(0,3);
     renderAutocomplete(inputField, inputFieldParent, autocompletes);
   }
 }
 
-$('input[type=text]').keyup(debounce(function() {
-	inputField = $(this);
-	var type = inputField.val();
-	inputAsArray = type.split(" ");
-	var lastWord = inputAsArray[inputAsArray.length-1];
-	if (lastWord !== undefined && lastWord.charAt(0)==='@') {
-		typingLocation = inputAsArray.length-1;
-		lastWord = lastWord.substring(1);
-		var searchURL = searchURLParts[0] + lastWord + searchURLParts[1] + "0.500";
-		$.ajax(searchURL)
-			.done(function(res) {
-        handleResponse(res, inputField)
-      });
-	} else {
-    destructAutocomplete();
+body.addEventListener('keyup', function(event) {
+  if (event.target !== event.currentTarget && event.target.placeholder === 'Add a comment…') {
+    inputField = event.target;
+    var type = inputField.value;
+    inputAsArray = type.split(" ");
+    var lastWord = inputAsArray[inputAsArray.length-1];
+    if (lastWord !== undefined && lastWord.charAt(0)==='@') {
+      typingLocation = inputAsArray.length-1;
+      lastWord = lastWord.substring(1);
+      var searchURL = searchURLParts[0] + lastWord + searchURLParts[1] + "0.500";
+      var oReq = new XMLHttpRequest();
+      oReq.onload = function(e) {
+        handleResponse(e.target.response, inputField);
+        pendingRequest = null;
+      }
+      oReq.open('GET', searchURL);
+      oReq.responseType = 'json';
+      if (pendingRequest) {
+        pendingRequest.abort();
+      }
+      oReq.send();
+      pendingRequest = oReq;
+    } else {
+      destructAutocomplete();
+    }
   }
-}, 250));
+  event.stopPropagation();
+});
