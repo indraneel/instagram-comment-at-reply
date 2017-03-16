@@ -1,10 +1,10 @@
 {
   "name": "Instagram Comment @Reply",
-  "version": "1.0",
+  "version": "0.0.1",
   "description": "autocompletes @replies in IG web comment box",
   "content_scripts": [ {
     "matches": [ "http://www.instagram.com/*", "https://www.instagram.com/*", "http://instagram.com/*", "https://instagram.com/*"],
-    "js": [ "background.js" ]
+    "js": [ "background.min.js" ]
   }],
   "manifest_version": 2
 }
