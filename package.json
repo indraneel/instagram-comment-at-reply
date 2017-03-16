@@ -1,0 +1,22 @@
+{
+  "name": "instagram-comment-reply",
+  "version": "0.0.1",
+  "description": "autocompletes @replies in IG web comment box",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indraneel/instagram-comment-at-reply.git"
+  },
+  "author": "indraneel purohit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/indraneel/instagram-comment-at-reply/issues"
+  },
+  "homepage": "https://github.com/indraneel/instagram-comment-at-reply#readme",
+  "dependencies": {
+    "minifier": "^0.8.1"
+  }
+}
